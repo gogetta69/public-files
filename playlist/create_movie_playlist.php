@@ -3,21 +3,20 @@
 // Please leave this in this script.
 // https://github.com/gogetta69/TMDB-To-VOD-Playlist
 
-$GLOBALS['DEBUG'] = false; 
-
+$GLOBALS['DEBUG'] = false;
 set_time_limit(0); // Remove PHP's time restriction
 
 if ($GLOBALS['DEBUG'] !== true) {
     error_reporting(0);	
 } else {
-	accessLog();
+
 }	
 
 
 //Set globals
 $apiKey = $SECRET_API_KEY;
 $playVodUrl = "[[SERVER_URL]]/play.php";
-$totalPages = 200;
+$totalPages = 1;
 $language = 'en-US';
 $movies_with_origin_country = 'US';
 $num = 0;
