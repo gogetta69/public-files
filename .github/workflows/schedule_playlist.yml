@@ -1,0 +1,25 @@
+name: Run Playlist Script
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # At 00:00 (midnight) UTC
+    - cron: '0 12 * * *' # At 12:00 (noon) UTC
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4' # Specify your PHP version
+
+    - name: Run PHP script
+      run: php playlist/create_movie_playlist.php
+      env:
+        SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
