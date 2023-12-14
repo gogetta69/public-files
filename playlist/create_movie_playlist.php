@@ -44,9 +44,9 @@ function fetchMovies($playVodUrl, $language, $apiKey, $totalPages)
     measureExecutionTime('fetchGenres', $playVodUrl, $language, $apiKey, $totalPages);
 
     //Save the Json and M3U8 Data
-    file_put_contents('playlist/playlist.m3u8', $outputContent);
+    file_put_contents('playlist.m3u8', $outputContent);
 
-    file_put_contents('playlist/playlist.json', json_encode($outputData));
+    file_put_contents('playlist.json', json_encode($outputData));
 
     return;
 }
