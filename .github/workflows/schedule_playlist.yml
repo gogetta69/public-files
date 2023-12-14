@@ -24,10 +24,13 @@ jobs:
       env:
         SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
 
+    - name: List files
+      run: ls -l
+
     - name: Commit and Push changes
       run: |
         git config --global user.name 'GitHub Actions'
         git config --global user.email 'actions@github.com'
-        git add playlist/playlist.m3u8 playlist/playlist.json
+        git add playlist.m3u8 playlist.json
         git commit -m "Update playlist files" || echo "No changes to commit"
         git push origin
