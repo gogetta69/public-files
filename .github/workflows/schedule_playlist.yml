@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up PHP
-      uses: shivammathur/setup-php@v4
+      uses: shivammathur/setup-php@v2
       with:
         php-version: '7.4' # Specify your PHP version
 
@@ -24,13 +24,10 @@ jobs:
       env:
         SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
 
-    - name: List files
-      run: ls -l
-
-    - name: Commit and Push changes
+    - name: Commit and Push to Public Repository
       run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
-        git add playlist.m3u8 playlist.json
-        git commit -m "Update playlist files" || echo "No changes to commit"
-        git push https://${{ secrets.RUN_ACTIONS_KEY }}@github.com/gogetta69/public-files.git
+        git config user.name "gogetta69"
+        git config user.email "gogetta.teams@gmail.com"
+        git add playlist/playlist.m3u8 playlist/playlist.json
+        git commit -m "Update Playlist" || echo "No changes to Playlist"
+        git push https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git
