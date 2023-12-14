@@ -28,6 +28,6 @@ jobs:
       run: |
         git config user.name "gogetta69"
         git config user.email "gogetta.teams@gmail.com"
-        git add playlist/playlist.m3u8 playlist/playlist.json
+        git add playlist.m3u8 playlist.json
         git commit -m "Update Playlist" || echo "No changes to Playlist"
         git push https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git
