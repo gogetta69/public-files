@@ -1,8 +1,5 @@
 name: Run Playlist Script
 
-permissions:
-  issues: write
-
 on:
   schedule:
     - cron: '0 0 * * *'  # At 00:00 (midnight) UTC
@@ -12,6 +9,8 @@ on:
 jobs:
   run-script:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
 
     steps:
     - name: Checkout repository
