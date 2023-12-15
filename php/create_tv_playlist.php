@@ -17,7 +17,7 @@ if ($GLOBALS['DEBUG'] !== true) {
 //Set globals
 $apiKey = getenv('SECRET_API_KEY');
 $playVodUrl = "[[SERVER_URL]]/play.php";
-$totalPages = 1;
+$totalPages = 200;
 $language = 'en-US';
 $series_with_origin_country = 'US';
 $num = 0;
