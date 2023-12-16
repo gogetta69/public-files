@@ -31,7 +31,7 @@ function fetchMovies($playVodUrl, $language, $apiKey, $totalPages)
     global $listType, $outputData, $outputContent, $num;
 
 	//Limit some categories to less items. (This allows the other categories to be populated)
-	$limitTotalPages = ($totalPages > 15) ? 15 : $totalPages;
+	$limitTotalPages = ($totalPages > 20) ? 20 : $totalPages;
 	
     // Call the function for now playing
     measureExecutionTime('fetchNowPlayingMovies', $playVodUrl, $language, $apiKey, $limitTotalPages);
@@ -106,16 +106,24 @@ function fetchNowPlayingMovies($playVodUrl, $language, $apiKey, $totalPages)
                     $year = '1970'; //Set to 1970 since its unknown.
 					$timestamp = '24034884';
                 }
-                $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
-                    "stream_type" => "movie", "stream_id" => $movie['id'], "stream_icon" =>
-                    'https://image.tmdb.org/t/p/original' . $movie['poster_path'], "rating" => isset($movie['vote_average']) ?
-                    $movie['vote_average'] : 0, "rating_5based" => isset($movie['vote_average']) ? ($movie['vote_average'] /
-                    2) : 0, "added" => $timestamp, "category_id" => 999992, "container_extension" =>
-                    "mp4", // Use mp4 as a dummy value.
-                    "custom_sid" => null, "direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
-                    "plot" => $movie['overview'], "backdrop_path" =>
-                    'https://image.tmdb.org/t/p/original' . $movie['backdrop_path'], "group" =>
-                    'Now Playing'];
+				$movieData = [
+					"num" => ++$num,
+					"name" => $movie['title'] . ' (' . $year . ')',
+					"stream_type" => "movie",
+					"stream_id" => $movie['id'],
+					"stream_icon" => 'https://image.tmdb.org/t/p/original' . $movie['poster_path'],
+					"rating" => isset($movie['vote_average']) ? round($movie['vote_average']) : 0,
+					"rating_5based" => isset($movie['vote_average']) ? round($movie['vote_average'] / 2) : 0,
+					"added" => $timestamp,
+					"category_id" => 999992,
+					"container_extension" => "mp4",  // Use mp4 as a dummy value.
+					"custom_sid" => null,
+					"direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
+					"plot" => $movie['overview'],
+					"backdrop_path" => 'https://image.tmdb.org/t/p/original' . $movie['backdrop_path'],
+					"group" => 'Now Playing'
+				];
+
 
                 $id = $movie['id'];
 
@@ -182,16 +190,24 @@ function fetchPopularMovies($playVodUrl, $language, $apiKey, $totalPages)
                     $year = '1970'; //Set to 1970 since its unknown.
 					$timestamp = '24034884';
                 }
-                $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
-                    "stream_type" => "movie", "stream_id" => $movie['id'], "stream_icon" =>
-                    'https://image.tmdb.org/t/p/original' . $movie['poster_path'], "rating" => isset($movie['vote_average']) ?
-                    $movie['vote_average'] : 0, "rating_5based" => isset($movie['vote_average']) ? ($movie['vote_average'] /
-                    2) : 0, "added" => time(), "category_id" => 999991, "container_extension" =>
-                    "mp4", // Use mp4 as a dummy value.
-                    "custom_sid" => null, "direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
-                    "plot" => $movie['overview'], "backdrop_path" =>
-                    'https://image.tmdb.org/t/p/original' . $movie['backdrop_path'], "group" =>
-                    'Popular'];
+				$movieData = [
+					"num" => ++$num,
+					"name" => $movie['title'] . ' (' . $year . ')',
+					"stream_type" => "movie",
+					"stream_id" => $movie['id'],
+					"stream_icon" => 'https://image.tmdb.org/t/p/original' . $movie['poster_path'],
+					"rating" => isset($movie['vote_average']) ? round($movie['vote_average']) : 0,
+					"rating_5based" => isset($movie['vote_average']) ? round($movie['vote_average'] / 2) : 0,
+					"added" => $timestamp,
+					"category_id" => 999992,
+					"container_extension" => "mp4",  // Use mp4 as a dummy value.
+					"custom_sid" => null,
+					"direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
+					"plot" => $movie['overview'],
+					"backdrop_path" => 'https://image.tmdb.org/t/p/original' . $movie['backdrop_path'],
+					"group" => 'Now Playing'
+				];
+
 
                 $id = $movie['id'];
 
@@ -256,15 +272,24 @@ function fetchMoviesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
 					$timestamp = '24034884';
                 }
 
-                $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
-                    "stream_type" => "movie", "stream_id" => $movie['id'], "stream_icon" =>
-                    'https://image.tmdb.org/t/p/original' . $movie['poster_path'], "rating" => isset($movie['vote_average']) ?
-                    $movie['vote_average'] : 0, "rating_5based" => isset($movie['vote_average']) ? ($movie['vote_average'] /
-                    2) : 0, "added" => $timestamp, "category_id" => $movie['genre_ids'][0],
-                    "container_extension" => "mp4", // Use mp4 as a dummy value.
-                    "custom_sid" => null, "direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
-                    "plot" => $movie['overview'], "backdrop_path" =>
-                    'https://image.tmdb.org/t/p/original' . $movie['backdrop_path'], "group" => $genreName];
+				$movieData = [
+					"num" => ++$num,
+					"name" => $movie['title'] . ' (' . $year . ')',
+					"stream_type" => "movie",
+					"stream_id" => $movie['id'],
+					"stream_icon" => 'https://image.tmdb.org/t/p/original' . $movie['poster_path'],
+					"rating" => isset($movie['vote_average']) ? round($movie['vote_average']) : 0,
+					"rating_5based" => isset($movie['vote_average']) ? round($movie['vote_average'] / 2) : 0,
+					"added" => $timestamp,
+					"category_id" => 999992,
+					"container_extension" => "mp4",  // Use mp4 as a dummy value.
+					"custom_sid" => null,
+					"direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
+					"plot" => $movie['overview'],
+					"backdrop_path" => 'https://image.tmdb.org/t/p/original' . $movie['backdrop_path'],
+					"group" => 'Now Playing'
+				];
+
 
                 $id = $movie['id'];
 
