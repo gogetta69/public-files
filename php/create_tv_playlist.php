@@ -5,7 +5,7 @@
 
 
 $GLOBALS['DEBUG'] = false;
-set_time_limit(0); // Remove PHP's time restriction
+set_time_limit(0); 
 
 if ($GLOBALS['DEBUG'] !== true) {
     error_reporting(0);	
@@ -34,7 +34,7 @@ function fetchSeries($playVodUrl, $language, $apiKey, $totalPages)
     global $listType, $outputData, $outputContent, $num;	
 	
 	//Limit some categories to less items. (This allows the other categories to be populated)
-	$limitTotalPages = ($totalPages > 15) ? 15 : $totalPages;
+	$limitTotalPages = ($totalPages > 20) ? 20 : $totalPages;
 	
 	// Call the function for on the air
     measureExecutionTime('fetchOnTheAirSeries', $playVodUrl, $language, $apiKey, $limitTotalPages);
@@ -146,8 +146,8 @@ function fetchSeriesWithNetwork($playVodUrl, $language, $apiKey, $totalPages)
 					"genre" => "",
 					"releaseDate" => $date,
 					"last_modified" => $timestamp,
-					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
-					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
+					"rating" => isset($show['vote_average']) ? round($show['vote_average']) : 0,
+					"rating_5based" => isset($show['vote_average']) ? round($show['vote_average'] / 2) : 0,
 					"backdrop_path" => [
 					  'https://image.tmdb.org/t/p/original' . $show['backdrop_path']
 					],
@@ -236,8 +236,8 @@ function fetchOnTheAirSeries($playVodUrl, $language, $apiKey, $totalPages)
 					"genre" => "",
 					"releaseDate" => $date,
 					"last_modified" => $timestamp,
-					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
-					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
+					"rating" => isset($show['vote_average']) ? round($show['vote_average']) : 0,
+					"rating_5based" => isset($show['vote_average']) ? round($show['vote_average'] / 2) : 0,
 					"backdrop_path" => [
 					  'https://image.tmdb.org/t/p/original' . $show['backdrop_path']
 					],
@@ -325,8 +325,8 @@ function fetchPopularSeries($playVodUrl, $language, $apiKey, $totalPages)
 					"genre" => "",
 					"releaseDate" => $date,
 					"last_modified" => $timestamp,
-					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
-					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
+					"rating" => isset($show['vote_average']) ? round($show['vote_average']) : 0,
+					"rating_5based" => isset($show['vote_average']) ? round($show['vote_average'] / 2) : 0,
 					"backdrop_path" => [
 					  'https://image.tmdb.org/t/p/original' . $show['backdrop_path']
 					],
@@ -414,8 +414,8 @@ function fetchTopRatedSeries($playVodUrl, $language, $apiKey, $totalPages)
 					"genre" => "",
 					"releaseDate" => $date,
 					"last_modified" => $timestamp,
-					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
-					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
+					"rating" => isset($show['vote_average']) ? round($show['vote_average']) : 0,
+					"rating_5based" => isset($show['vote_average']) ? round($show['vote_average'] / 2) : 0,
 					"backdrop_path" => [
 					  'https://image.tmdb.org/t/p/original' . $show['backdrop_path']
 					],
@@ -504,8 +504,8 @@ function fetchSeriesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
 					"genre" => "",
 					"releaseDate" => $date,
 					"last_modified" => $timestamp,
-					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
-					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
+					"rating" => isset($show['vote_average']) ? round($show['vote_average']) : 0,
+					"rating_5based" => isset($show['vote_average']) ? round($show['vote_average'] / 2) : 0,
 					"backdrop_path" => [
 					  'https://image.tmdb.org/t/p/original' . $show['backdrop_path']
 					],
