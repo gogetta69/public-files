@@ -23,6 +23,7 @@ $num = 0;
 $outputData = [];
 $outputContent = "#EXTM3U\n";
 $addedMovieIds = [];
+$addedTimestamp = time();
 
 fetchMovies($playVodUrl, $language, $apiKey, $totalPages);
 
@@ -31,7 +32,7 @@ function fetchMovies($playVodUrl, $language, $apiKey, $totalPages)
     global $listType, $outputData, $outputContent, $num;
 
 	//Limit some categories to less items. (This allows the other categories to be populated)
-	$limitTotalPages = ($totalPages > 20) ? 20 : $totalPages;
+	$limitTotalPages = ($totalPages > 15) ? 15 : $totalPages;
 	
     // Call the function for now playing
     measureExecutionTime('fetchNowPlayingMovies', $playVodUrl, $language, $apiKey, $limitTotalPages);
@@ -96,15 +97,14 @@ function fetchNowPlayingMovies($playVodUrl, $language, $apiKey, $totalPages)
 
             foreach ($movies as $movie) {
                 // JSON formatting for each movie
+				$timestamp = $GLOBALS['addedTimestamp']--;
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
 					$date = $movie['release_date'];
-					$timestamp = strtotime($date);
                 } else { 
 					$date = '1970-01-01';
                     $year = '1970'; //Set to 1970 since its unknown.
-					$timestamp = '24034884';
                 }
                 $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
                     "stream_type" => "movie", "stream_id" => $movie['id'], "stream_icon" =>
@@ -171,16 +171,15 @@ function fetchPopularMovies($playVodUrl, $language, $apiKey, $totalPages)
 
 
             foreach ($movies as $movie) {
+				$timestamp = $GLOBALS['addedTimestamp']--;
                 // JSON formatting for each movie
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
 					$date = $movie['release_date'];
-					$timestamp = strtotime($date);
                 } else { 
 					$date = '1970-01-01';
                     $year = '1970'; //Set to 1970 since its unknown.
-					$timestamp = '24034884';
                 }
                 $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
                     "stream_type" => "movie", "stream_id" => $movie['id'], "stream_icon" =>
@@ -244,16 +243,15 @@ function fetchMoviesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
             $movies = $data['results'];
 
             foreach ($movies as $movie) {
+				$timestamp = $GLOBALS['addedTimestamp']--;
                 // JSON formatting for each movie
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
 					$date = $movie['release_date'];
-					$timestamp = strtotime($date);
                 } else { 
 					$date = '1970-01-01';
                     $year = '1970'; //Set to 1970 since its unknown.
-					$timestamp = '24034884';
                 }
 
                 $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
@@ -337,3 +335,4 @@ function measureExecutionTime($func, ...$params) {
 }
 
 ?>
+
