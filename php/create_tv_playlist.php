@@ -33,7 +33,7 @@ function fetchSeries($playVodUrl, $language, $apiKey, $totalPages)
     global $listType, $outputData, $outputContent, $num;	
 	
 	//Limit some categories to less items. (This allows the other categories to be populated)
-	$limitTotalPages = ($totalPages > 15) ? 15 : $totalPages;
+	$limitTotalPages = ($totalPages > 20) ? 20 : $totalPages;
 	
 	// Call the function for on the air
     measureExecutionTime('fetchOnTheAirSeries', $playVodUrl, $language, $apiKey, $limitTotalPages);
