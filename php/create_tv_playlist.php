@@ -33,7 +33,7 @@ function fetchSeries($playVodUrl, $language, $apiKey, $totalPages)
     global $listType, $outputData, $outputContent, $num;	
 	
 	//Limit some categories to less items. (This allows the other categories to be populated)
-	$limitTotalPages = ($totalPages > 20) ? 20 : $totalPages;
+	$limitTotalPages = ($totalPages > 15) ? 15 : $totalPages;
 	
 	// Call the function for on the air
     measureExecutionTime('fetchOnTheAirSeries', $playVodUrl, $language, $apiKey, $limitTotalPages);
@@ -142,7 +142,7 @@ function fetchSeriesWithNetwork($playVodUrl, $language, $apiKey, $totalPages)
 					"cast" => "",
 					"director" => "",
 					"genre" => "",
-					"releaseDate" => $timestamp,
+					"releaseDate" => $date,
 					"last_modified" => $timestamp,
 					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
 					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
@@ -231,7 +231,7 @@ function fetchOnTheAirSeries($playVodUrl, $language, $apiKey, $totalPages)
 					"cast" => "",
 					"director" => "",
 					"genre" => "",
-					"releaseDate" => $timestamp,
+					"releaseDate" => $date,
 					"last_modified" => $timestamp,
 					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
 					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
@@ -319,7 +319,7 @@ function fetchPopularSeries($playVodUrl, $language, $apiKey, $totalPages)
 					"cast" => "",
 					"director" => "",
 					"genre" => "",
-					"releaseDate" => $timestamp,
+					"releaseDate" => $date,
 					"last_modified" => $timestamp,
 					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
 					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
@@ -407,7 +407,7 @@ function fetchTopRatedSeries($playVodUrl, $language, $apiKey, $totalPages)
 					"cast" => "",
 					"director" => "",
 					"genre" => "",
-					"releaseDate" => $timestamp,
+					"releaseDate" => $date,
 					"last_modified" => $timestamp,
 					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
 					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
@@ -496,7 +496,7 @@ function fetchSeriesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
 					"cast" => "",
 					"director" => "",
 					"genre" => "",
-					"releaseDate" => $timestamp,
+					"releaseDate" => $date,
 					"last_modified" => $timestamp,
 					"rating" => isset($show['vote_average']) ? $show['vote_average'] : 0,
 					"rating_5based" => isset($show['vote_average']) ? ($show['vote_average'] / 2) : 0,
