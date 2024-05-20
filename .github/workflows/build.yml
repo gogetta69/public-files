@@ -30,6 +30,10 @@ jobs:
           npm install --force
         fi
 
+    - name: Remove conflicting containerd package
+      run: |
+        sudo apt-get remove -y containerd
+
     - name: Set up Docker
       run: |
         sudo apt-get update
