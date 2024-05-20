@@ -25,9 +25,9 @@ jobs:
     - name: Install dependencies
       run: |
         if [ -f package-lock.json ]; then
-          npm ci --legacy-peer-deps
+          npm ci --force
         else
-          npm install --legacy-peer-deps
+          npm install --force
         fi
 
     - name: Set up Docker
