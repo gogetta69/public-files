@@ -30,35 +30,21 @@ jobs:
           npm install --force
         fi
 
-    - name: Remove conflicting containerd package
+    - name: Install Docker using convenience script
       run: |
-        sudo apt-get remove -y containerd.io containerd
-
-    - name: Install Docker from Docker's repository
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          ca-certificates \
-          curl \
-          gnupg \
-          lsb-release
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo \
-          "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-        sudo apt-get update
-        sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
 
     - name: Build executable with nexe
       run: |
-        docker run --rm -v /home/runner/work/public-files/public-files:/app -w /app node:20-alpine /bin/sh -c "
-        apk add --no-cache build-base curl bash && \
-        curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-        curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
-        apk add --no-cache --force-overwrite /tmp/glibc-2.32-r0.apk && \
-        apk add --no-cache nasm && \
-        npm install -g nexe && \
-        nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
+        docker run --rm -v ${{ github.workspace }}:/app -w /app node:20-alpine /bin/sh -c "
+          apk add --no-cache build-base curl bash && \
+          curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+          curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
+          apk add --no-cache --force-overwrite /tmp/glibc-2.32-r0.apk && \
+          apk add --no-cache nasm && \
+          npm install -g nexe && \
+          nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
         "
 
     - name: Upload built executable
