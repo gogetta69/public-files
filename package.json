@@ -1,0 +1,21 @@
+{
+  "name": "thetvapp-tokensniff",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "puppeteer": "^22.9.0"
+  },
+  "pkg": {
+    "assets": [
+      "chromium/**/*"
+    ]
+  }
+}
+
