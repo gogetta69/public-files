@@ -30,22 +30,15 @@ jobs:
           npm install --force
         fi
 
-    - name: Install Docker using convenience script
+    - name: Install build dependencies
       run: |
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        sudo sh get-docker.sh
+        sudo apt-get update
+        sudo apt-get install -y build-essential nasm
 
     - name: Build executable with nexe
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app -w /app node:20-alpine /bin/sh -c "
-          apk add --no-cache build-base curl bash && \
-          curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-          curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
-          apk add --no-cache --force-overwrite /tmp/glibc-2.32-r0.apk && \
-          apk add --no-cache nasm && \
-          npm install -g nexe && \
-          nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
-        "
+        npm install -g nexe
+        nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
 
     - name: Upload built executable
       uses: actions/upload-artifact@v2
