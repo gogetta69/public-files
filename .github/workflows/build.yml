@@ -23,6 +23,7 @@ jobs:
         node-version: '20'
 
     - name: Install dependencies
+      working-directory: ./path/to/your/project # Replace with the actual path
       run: |
         if [ -f package-lock.json ]; then
           npm ci --force
@@ -51,7 +52,7 @@ jobs:
 
     - name: Build executable with nexe
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app -w /app node:16-alpine /bin/sh -c "
+        docker run --rm -v ${{ github.workspace }}:/app -w /app/path/to/your/project node:16-alpine /bin/sh -c "
           apk add --no-cache build-base curl bash && \
           curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
           curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
@@ -65,4 +66,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: thetvapp-linux
-        path: thetvapp-linux
+        path: ./path/to/your/project/thetvapp-linux
