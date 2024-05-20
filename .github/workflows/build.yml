@@ -23,7 +23,6 @@ jobs:
         node-version: '20'
 
     - name: Install dependencies
-      working-directory: ./path/to/your/project # Replace with the actual path
       run: |
         if [ -f package-lock.json ]; then
           npm ci --force
@@ -52,18 +51,18 @@ jobs:
 
     - name: Build executable with nexe
       run: |
-        docker run --rm -v ${{ github.workspace }}:/app -w /app/path/to/your/project node:16-alpine /bin/sh -c "
-          apk add --no-cache build-base curl bash && \
-          curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-          curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
-          apk add --no-cache --allow-untrusted /tmp/glibc-2.32-r0.apk && \
-          apk add --no-cache nasm && \
-          npm install -g nexe && \
-          nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
+        docker run --rm -v /home/runner/work/public-files/public-files:/app -w /app node:20-alpine /bin/sh -c "
+        apk add --no-cache build-base curl bash && \
+        curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+        curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
+        apk add --no-cache --force-overwrite /tmp/glibc-2.32-r0.apk && \
+        apk add --no-cache nasm && \
+        npm install -g nexe && \
+        nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
         "
 
     - name: Upload built executable
       uses: actions/upload-artifact@v2
       with:
         name: thetvapp-linux
-        path: ./path/to/your/project/thetvapp-linux
+        path: thetvapp-linux
