@@ -1,0 +1,48 @@
+name: Build Linux Executable
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Set up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    - name: Build executable with nexe
+      run: |
+        docker run --rm -v ${{ github.workspace }}:/app -w /app node:20-alpine /bin/sh -c "
+          apk add --no-cache build-base curl bash && \
+          curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+          curl -Lo /tmp/glibc-2.32-r0.apk https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk && \
+          apk add --no-cache /tmp/glibc-2.32-r0.apk && \
+          apk add --no-cache nasm && \
+          npm install -g nexe && \
+          nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux
+        "
+
+    - name: Upload built executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: thetvapp-linux
+        path: thetvapp-linux
