@@ -6,14 +6,17 @@ RUN sed -i 's/mirrorlist=http/mirrorlist=https/' /etc/yum.repos.d/CentOS-Base.re
     sed -i 's|#baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/|baseurl=http://vault.centos.org/6.10/os/$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|#baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/|baseurl=http://vault.centos.org/6.10/updates/$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|#baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/|baseurl=http://vault.centos.org/6.10/extras/$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
-    sed -i 's|#baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/|baseurl=http://vault.centos.org/6.10/centosplus/$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
-    sed -i 's|mirrorlist=https://mirrorlist.centos.org/?release=$releasever&repo=sclo-rh&arch=$basearch|baseurl=http://vault.centos.org/6.10/sclo/$basearch/sclo-rh|g' /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo && \
-    sed -i 's|mirrorlist=https://mirrorlist.centos.org/?release=$releasever&repo=sclo-sclo&arch=$basearch|baseurl=http://vault.centos.org/6.10/sclo/$basearch/sclo-sclo|g' /etc/yum.repos.d/CentOS-SCLo-scl.repo
+    sed -i 's|#baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/|baseurl=http://vault.centos.org/6.10/centosplus/$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo
 
-# Install development tools and dependencies
+# Install centos-release-scl to get the scl repo files
+RUN yum install -y centos-release-scl && \
+    sed -i 's|mirrorlist=https://mirrorlist.centos.org/?release=$releasever&repo=sclo-rh&arch=$basearch|baseurl=http://vault.centos.org/6.10/sclo/$basearch/sclo-rh|g' /etc/yum.repos.d/CentOS-SCLo-scl-rh.repo && \
+    sed -i 's|mirrorlist=https://mirrorlist.centos.org/?release=$releasever&repo=sclo-sclo&arch=$basearch|baseurl=http://vault.centos.org/6.10/sclo/$basearch/sclo-sclo|g' /etc/yum.repos.d/CentOS-SCLo-scl.repo && \
+    yum clean all
+
+# Install development tools and other dependencies
 RUN yum -y update && \
     yum groupinstall -y "Development Tools" && \
-    yum install -y centos-release-scl && \
     yum install -y wget && \
     yum clean all
 
