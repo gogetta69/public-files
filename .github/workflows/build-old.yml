@@ -1,4 +1,4 @@
-name: Build Linux Executable
+name: Build Linux Executable OLD
 
 on:
   push:
