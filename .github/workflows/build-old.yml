@@ -21,13 +21,10 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Build executable in CentOS 6
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: false
-        tags: build-image:latest
-
+      run: |
+        docker buildx create --use
+        docker buildx build --file ./Dockerfile --tag build-image:latest --load .
+      
     - name: Run the build container
       run: docker run --rm -v ${{ github.workspace }}:/app build-image:latest
 
