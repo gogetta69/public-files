@@ -27,22 +27,4 @@ jobs:
           scl enable devtoolset-7 bash && \
           
           # Install Node.js
-          wget https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz && \
-          tar -xJf node-v20.13.1-linux-x64.tar.xz -C /usr/local --strip-components=1 && \
-          rm node-v20.13.1-linux-x64.tar.xz && \
-          
-          # Install Nexe globally
-          npm install -g nexe && \
-          
-          # Install project dependencies
-          if [ -f package-lock.json ]; then npm ci --force; else npm install --force; fi && \
-          
-          # Build the application using Nexe
-          nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux --build
-        "
-
-    - name: Upload built executable
-      uses: actions/upload-artifact@v2
-      with:
-        name: thetvapp-linux
-        path: thetvapp-linux
+          wget https://nodejs.org/dist/v20.13.1/node-v20.13.1
