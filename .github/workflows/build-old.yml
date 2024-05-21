@@ -15,21 +15,47 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Build executable in CentOS 6
+    - name: Set up Docker
       run: |
-        docker buildx create --use
-        docker buildx build --file ./Dockerfile --tag build-image:latest --load .
-      
-    - name: Run the build container
-      run: docker run --rm -v ${{ github.workspace }}:/app build-image:latest
+        docker run --name build-container -v ${{ github.workspace }}:/workspace -w /workspace centos:6 bash -c "
+          # Update repository URLs to use the vault
+          sed -i 's/mirrorlist=http/mirrorlist=https/' /etc/yum.repos.d/CentOS-Base.repo && \
+          sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/os/\$basearch/|baseurl=http://vault.centos.org/6.10/os/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
+          sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/updates/\$basearch/|baseurl=http://vault.centos.org/6.10/updates/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
+          sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/extras/\$basearch/|baseurl=http://vault.centos.org/6.10/extras/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
+          sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/centosplus/\$basearch/|baseurl=http://vault.centos.org/6.10/centosplus/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
+          
+          # Install development tools and dependencies
+          yum -y update && \
+          yum groupinstall -y 'Development Tools' && \
+          yum install -y centos-release-scl && \
+          yum install -y wget && \
+          
+          # Install Developer Toolset (GCC 7)
+          yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils && \
+          
+          # Enable the Developer Toolset (GCC 7)
+          scl enable devtoolset-7 bash && \
+          
+          # Install Node.js
+          wget https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz && \
+          tar -xJf node-v20.13.1-linux-x64.tar.xz -C /usr/local --strip-components=1 && \
+          rm node-v20.13.1-linux-x64.tar.xz && \
+          
+          # Install Nexe globally
+          npm install -g nexe && \
+          
+          # Install project dependencies
+          if [ -f package-lock.json ]; then npm ci --force; else npm install --force; fi && \
+          
+          # Build the application using Nexe
+          nexe thetvapp-win64.js -t linux-x64-20.13.1 -o thetvapp-linux --build
+        "
 
     - name: Upload built executable
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: thetvapp-linux
-        path: ./thetvapp-linux
+        path: thetvapp-linux
