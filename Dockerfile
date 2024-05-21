@@ -2,16 +2,24 @@
 FROM centos:6
 
 # Install development tools and dependencies
-RUN yum groupinstall -y "Development Tools" && \
+RUN yum -y update && \
+    yum groupinstall -y "Development Tools" && \
     yum install -y centos-release-scl && \
-    yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils && \
     yum install -y wget && \
-    wget https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz && \
+    yum clean all
+
+# Install Developer Toolset (GCC 7)
+RUN yum install -y devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils && \
+    yum clean all
+
+# Download and install Node.js
+RUN wget https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz && \
     tar -xJf node-v20.13.1-linux-x64.tar.xz -C /usr/local --strip-components=1 && \
+    rm node-v20.13.1-linux-x64.tar.xz && \
     yum clean all
 
 # Enable the Developer Toolset (GCC 7)
-RUN scl enable devtoolset-7 bash
+RUN echo "source /opt/rh/devtoolset-7/enable" >> /etc/profile
 
 # Set Node.js environment variables
 ENV PATH="/usr/local/bin:${PATH}"
