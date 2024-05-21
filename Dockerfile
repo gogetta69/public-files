@@ -4,7 +4,9 @@ FROM centos:6
 # Update the repository URLs to use the vault
 RUN sed -i 's/mirrorlist=http/mirrorlist=https/' /etc/yum.repos.d/CentOS-Base.repo && \
     sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/os/\$basearch/|baseurl=http://vault.centos.org/6.10/os/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
-    sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/updates/\$basearch/|baseurl=http://vault.centos.org/6.10/updates/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo
+    sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/updates/\$basearch/|baseurl=http://vault.centos.org/6.10/updates/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/extras/\$basearch/|baseurl=http://vault.centos.org/6.10/extras/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo && \
+    sed -i 's|#baseurl=http://mirror.centos.org/centos/\$releasever/centosplus/\$basearch/|baseurl=http://vault.centos.org/6.10/centosplus/\$basearch/|g' /etc/yum.repos.d/CentOS-Base.repo
 
 # Install development tools and dependencies
 RUN yum -y update && \
