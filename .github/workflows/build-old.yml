@@ -34,6 +34,9 @@ jobs:
             sed -i 's|mirrorlist=https://mirrorlist.centos.org/\?release=\$releasever&repo=sclo-sclo&arch=\$basearch|baseurl=http://vault.centos.org/6.10/sclo/\$basearch/sclo-sclo|g' /etc/yum.repos.d/CentOS-SCLo-scl.repo;
           fi
 
+          # Clean yum cache
+          yum clean all
+
           # Install development tools and dependencies
           yum -y update && \
           yum groupinstall -y 'Development Tools' && \
@@ -65,4 +68,3 @@ jobs:
       with:
         name: thetvapp-linux
         path: thetvapp-linux
-
