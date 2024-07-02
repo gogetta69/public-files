@@ -145,7 +145,7 @@ foreach ($allPosts as $movie) {
         'num' => $counter,
         'name' => $title,
         'stream_type' => 'adult',
-        'stream_id' => 0 . $counter,
+        'stream_id' => $counter,
         'stream_icon' => $posterPath,
         'rating' => 0,
         'rating_5based' => 0,
