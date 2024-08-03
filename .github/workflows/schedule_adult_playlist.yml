@@ -1,0 +1,47 @@
+name: Run Adult Playlist Script
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # At 00:00 (midnight) UTC on Sunday
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.RUN_ACTIONS }}
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+
+    - name: Run Adult Playlist PHP script
+      run: php php/create_adult_playlist.php
+      env:
+        SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
+
+    - name: Validate JSON file
+      id: validate_json
+      run: |
+        if php -r "json_decode(file_get_contents('adult-movies.json')); if (json_last_error() !== JSON_ERROR_NONE) { exit(1); }"; then
+          echo "JSON is valid"
+        else
+          echo "JSON is invalid"
+          exit 1
+        fi
+    - name: Commit and Push to Public Repository
+      if: steps.validate_json.outcome == 'success'
+      run: |
+        git config user.name "gogetta69"
+        git config user.email "gogetta.teams@gmail.com"
+        git add adult-movies.json
+        git commit -m "Update Adult Movies Playlist" || echo "No changes to Adult Movies Playlist"
+        git pull --rebase https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git main
+        git push https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git
