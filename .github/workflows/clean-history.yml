@@ -1,0 +1,62 @@
+name: Clean History of Specific Files
+
+on:
+  schedule:
+    # Runs at 00:00 UTC on the 1st of every month
+    - cron: '0 0 1 * *'
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  clean_history:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
+
+    - name: Configure Git
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+
+    - name: Save Current Versions of Files
+      run: |
+        mkdir -p /tmp/backup
+        cp adult-movies.json /tmp/backup/adult-movies.json.bak || true
+        cp epg.xml /tmp/backup/epg.xml.bak || true
+        cp playlist.json /tmp/backup/playlist.json.bak || true
+        cp playlist.m3u8 /tmp/backup/playlist.m3u8.bak || true
+        cp tv_playlist.json /tmp/backup/tv_playlist.json.bak || true
+
+    - name: Install Git Filter-Repo
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget -O ~/git-filter-repo https://raw.githubusercontent.com/newren/git-filter-repo/main/git-filter-repo
+        chmod +x ~/git-filter-repo
+        sudo mv ~/git-filter-repo /usr/local/bin/
+
+    - name: Run Git Filter-Repo
+      run: |
+        git filter-repo --force --path adult-movies.json --path epg.xml --path playlist.json --path playlist.m3u8 --path tv_playlist.json --invert-paths
+
+    - name: Restore Current Versions of Files
+      run: |
+        cp /tmp/backup/adult-movies.json.bak adult-movies.json || echo "File not found: adult-movies.json"
+        cp /tmp/backup/epg.xml.bak epg.xml || echo "File not found: epg.xml"
+        cp /tmp/backup/playlist.json.bak playlist.json || echo "File not found: playlist.json"
+        cp /tmp/backup/playlist.m3u8.bak playlist.m3u8 || echo "File not found: playlist.m3u8"
+        cp /tmp/backup/tv_playlist.json.bak tv_playlist.json || echo "File not found: tv_playlist.json"
+        git add adult-movies.json epg.xml playlist.json playlist.m3u8 tv_playlist.json
+        git commit -m "Re-add current versions of files" || echo "No changes to commit"
+
+    - name: Clean Up and Force Push
+      run: |
+        git remote add origin https://github.com/gogetta69/public-files.git
+        git fetch origin
+        git branch -u origin/main main
+        git push origin main --force
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
