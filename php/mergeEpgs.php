@@ -52,8 +52,6 @@ function mergeEPGData() {
         error_log('GAS_KEY is not set.');
     }
 
-    exit;
-
     $epgUrls = [
         "https://script.google.com/macros/s/AKfycbzAQcsx5OgIXo0VS6RXVCQ4BCP6J7A6AstliLtNpvUoijt2lXA7IZ-rL0ekJPTu0GPXQg/exec?pass=$gasKey",
         "https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/PlutoTV/us.xml",
