@@ -5,7 +5,7 @@ on:
     - cron: '0 0 * * *'  # At 00:00 (midnight) UTC
     - cron: '0 8 * * *'  # At 08:00 (morning) UTC
     - cron: '0 16 * * *' # At 16:00 (afternoon) UTC
-  workflow_dispatch: # Manual trigger
+  workflow_dispatch:
 
 jobs:
   download-files:
