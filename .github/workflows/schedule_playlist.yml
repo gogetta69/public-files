@@ -10,13 +10,13 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      contents: write
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.RUN_ACTIONS }}  # Use GITHUB_TOKEN for authentication
+        token: ${{ secrets.RUN_ACTIONS }}
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
@@ -33,10 +33,10 @@ jobs:
       env:
         SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
 
-    - name: Commit and Push to Public Repository
+    - name: Commit and Force Push to Public Repository
       run: |
-        git config user.name "gogetta69"
-        git config user.email "gogetta.teams@gmail.com"
+        git config user.name "actions-user"
+        git config user.email "actions@github.com"
         git add playlist.m3u8 playlist.json tv_playlist.json
         git commit -m "Update Playlists" || echo "No changes to Playlists"
-        git push https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git
+        git push --force https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git main
