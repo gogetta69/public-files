@@ -29,6 +29,8 @@ jobs:
         cp playlist.json /tmp/backup/playlist.json.bak || true
         cp playlist.m3u8 /tmp/backup/playlist.m3u8.bak || true
         cp tv_playlist.json /tmp/backup/tv_playlist.json.bak || true
+        cp Pluto-TV/us.m3u8 /tmp/backup/us.m3u8.bak || true
+        cp Pluto-TV/us.xml /tmp/backup/us.xml.bak || true
 
     - name: Install Git Filter-Repo
       run: |
@@ -40,7 +42,14 @@ jobs:
 
     - name: Run Git Filter-Repo
       run: |
-        git filter-repo --force --path adult-movies.json --path epg.xml --path playlist.json --path playlist.m3u8 --path tv_playlist.json --invert-paths
+        git filter-repo --force --path adult-movies.json \
+                        --path epg.xml \
+                        --path playlist.json \
+                        --path playlist.m3u8 \
+                        --path tv_playlist.json \
+                        --path Pluto-TV/us.m3u8 \
+                        --path Pluto-TV/us.xml \
+                        --invert-paths
 
     - name: Restore Current Versions of Files
       run: |
@@ -49,7 +58,9 @@ jobs:
         cp /tmp/backup/playlist.json.bak playlist.json || echo "File not found: playlist.json"
         cp /tmp/backup/playlist.m3u8.bak playlist.m3u8 || echo "File not found: playlist.m3u8"
         cp /tmp/backup/tv_playlist.json.bak tv_playlist.json || echo "File not found: tv_playlist.json"
-        git add adult-movies.json epg.xml playlist.json playlist.m3u8 tv_playlist.json
+        cp /tmp/backup/us.m3u8.bak Pluto-TV/us.m3u8 || echo "File not found: us.m3u8"
+        cp /tmp/backup/us.xml.bak Pluto-TV/us.xml || echo "File not found: us.xml"
+        git add adult-movies.json epg.xml playlist.json playlist.m3u8 tv_playlist.json Pluto-TV/us.m3u8 Pluto-TV/us.xml
         git commit -m "Re-add current versions of files" || echo "No changes to commit"
 
     - name: Clean Up and Force Push
