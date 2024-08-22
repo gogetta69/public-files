@@ -54,7 +54,7 @@ function mergeEPGData() {
 
     $epgUrls = [
         "https://script.google.com/macros/s/AKfycbzAQcsx5OgIXo0VS6RXVCQ4BCP6J7A6AstliLtNpvUoijt2lXA7IZ-rL0ekJPTu0GPXQg/exec?pass=$gasKey",
-        "https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/PlutoTV/us.xml",
+        "https://raw.githubusercontent.com/gogetta69/public-files/main/Pluto-TV/us.xml",
         "https://epg.pw/xmltv/epg_ZA.xml",
         "https://epg.pw/api/epg.xml?channel_id=9025",
         "https://epg.pw/api/epg.xml?channel_id=8862",
