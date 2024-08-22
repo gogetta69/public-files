@@ -5,7 +5,7 @@ on:
     - cron: '0 0 * * *'  # At 00:00 (midnight) UTC
     - cron: '0 8 * * *'  # At 08:00 (morning) UTC
     - cron: '0 16 * * *' # At 16:00 (afternoon) UTC
-  workflow_dispatch:
+  workflow_dispatch: # Manual trigger
 
 jobs:
   download-files:
@@ -18,10 +18,10 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download us.m3u8
-      run: curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o Pluto-TV/us.m3u8 ${{ secrets.PLUTO_PLAYLIST_URL }}
+      run: curl -o Pluto-TV/us.m3u8 "${{ secrets.PLUTO_PLAYLIST_URL }}"
 
     - name: Download us.xml
-      run: curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o Pluto-TV/us.xml ${{ secrets.PLUTO_EPG_URL }}
+      run: curl -o Pluto-TV/us.xml "${{ secrets.PLUTO_EPG_URL }}"
 
     - name: Commit and Push Updates
       run: |
