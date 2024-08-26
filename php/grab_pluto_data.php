@@ -1,5 +1,27 @@
 <?php
 
+function generateUuidV4() {
+    // Generate a random UUID v4
+    $data = bin2hex(random_bytes(16));
+    return sprintf('%s-%s-%s-%s-%s',
+        substr($data, 0, 8),
+        substr($data, 8, 4),
+        substr($data, 12, 4),
+        substr($data, 16, 4),
+        substr($data, 20)
+    );
+}
+
+function generateShortHexSid($length) {
+    // Generate a random hexadecimal string of the specified length
+    $chars = 'abcdef0123456789';
+    $sid = '';
+    for ($i = 0; $i < $length; $i++) {
+        $sid .= $chars[rand(0, strlen($chars) - 1)];
+    }
+    return $sid;
+}
+
 function grabEPG() {
     echo '[INFO] Grabbing EPG...' . PHP_EOL;
 
@@ -24,9 +46,10 @@ function processEPG($channels) {
     $m3u8 = "#EXTM3U url-tvg=\"{$epgUrl}\"\n";
     $tvElements = [];
     $processedPrograms = [];
-
-    $deviceId = '15633747-485c-40a6-9eec-02cac8891d87';
-    $sid = uniqid();
+	
+	// Generate new deviceId and sid
+    $deviceId = generateUuidV4();
+    $sid = generateShortHexSid(12);
 
     foreach ($channels as $channel) {
         if ($channel['isStitched']) {
