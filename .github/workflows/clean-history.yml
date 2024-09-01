@@ -51,8 +51,15 @@ jobs:
                         --path Pluto-TV/us.xml \
                         --invert-paths
 
+    - name: List Backup Directory Contents
+      run: ls -al /tmp/backup/
+
+    - name: List Pluto-TV Directory Contents Before Restore
+      run: ls -al Pluto-TV/
+
     - name: Restore Current Versions of Files
       run: |
+        mkdir -p Pluto-TV
         cp /tmp/backup/adult-movies.json.bak adult-movies.json || echo "File not found: adult-movies.json"
         cp /tmp/backup/epg.xml.bak epg.xml || echo "File not found: epg.xml"
         cp /tmp/backup/playlist.json.bak playlist.json || echo "File not found: playlist.json"
@@ -62,6 +69,9 @@ jobs:
         cp /tmp/backup/us.xml.bak Pluto-TV/us.xml || echo "File not found: us.xml"
         git add adult-movies.json epg.xml playlist.json playlist.m3u8 tv_playlist.json Pluto-TV/us.m3u8 Pluto-TV/us.xml
         git commit -m "Re-add current versions of files" || echo "No changes to commit"
+
+    - name: List Pluto-TV Directory Contents After Restore
+      run: ls -al Pluto-TV/
 
     - name: Clean Up and Force Push
       run: |
