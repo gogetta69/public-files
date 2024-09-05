@@ -39,6 +39,11 @@ function grabEPG() {
 }
 
 function processEPG($channels) {
+    // Sort channels alphabetically by the key 'name'
+    usort($channels, function ($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
+	
     // Hardcoded URL for the EPG file
     $epgUrl = "https://raw.githubusercontent.com/gogetta69/public-files/main/Pluto-TV/us.xml";
 
