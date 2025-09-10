@@ -16,7 +16,8 @@ if ($GLOBALS['DEBUG'] !== true) {
 //Set globals
 $apiKey = getenv('SECRET_API_KEY');
 $playVodUrl = "[[SERVER_URL]]/play.php";
-$totalPages = 200;
+$totalPages = 250;
+$minYear = 1970; // Skip older titles
 $language = 'en-US';
 $movies_with_origin_country = 'US';
 $num = 0;
@@ -50,7 +51,6 @@ function fetchMovies($playVodUrl, $language, $apiKey, $totalPages)
 
     return;
 }
-
 
 // Function to fetch and handle errors for a URL
 function fetchAndHandleErrors($url, $errorMessage)
@@ -96,14 +96,18 @@ function fetchNowPlayingMovies($playVodUrl, $language, $apiKey, $totalPages)
             $movies = $data['results'];
 
             foreach ($movies as $movie) {
+								// Skip invalid movies
+                if (!isValidMovie($movie)) {
+                    continue;
+                }                
                 // JSON formatting for each movie
-				$timestamp = $GLOBALS['addedTimestamp']--;
+								$timestamp = $GLOBALS['addedTimestamp']--;
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
-					$date = $movie['release_date'];
+										$date = $movie['release_date'];
                 } else { 
-					$date = '1970-01-01';
+										$date = '1970-01-01';
                     $year = '1970'; //Set to 1970 since its unknown.
                 }
                 $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
@@ -171,21 +175,25 @@ function fetchPopularMovies($playVodUrl, $language, $apiKey, $totalPages)
 
 
             foreach ($movies as $movie) {
-				$timestamp = $GLOBALS['addedTimestamp']--;
+								// Skip invalid movies
+                if (!isValidMovie($movie)) {
+                    continue;
+                }  
+								$timestamp = $GLOBALS['addedTimestamp']--;
                 // JSON formatting for each movie
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
-					$date = $movie['release_date'];
+										$date = $movie['release_date'];
                 } else { 
-					$date = '1970-01-01';
+										$date = '1970-01-01';
                     $year = '1970'; //Set to 1970 since its unknown.
                 }
                 $movieData = ["num" => ++$num, "name" => $movie['title'] . ' (' . $year . ')',
                     "stream_type" => "movie", "stream_id" => $movie['id'], "stream_icon" =>
                     'https://image.tmdb.org/t/p/original' . $movie['poster_path'], "rating" => isset($movie['vote_average']) ?
                     $movie['vote_average'] : 0, "rating_5based" => isset($movie['vote_average']) ? ($movie['vote_average'] /
-                    2) : 0, "added" => time(), "category_id" => 999991, "container_extension" =>
+                    2) : 0, "added" => $timestamp, "category_id" => 999991, "container_extension" =>
                     "mp4", // Use mp4 as a dummy value.
                     "custom_sid" => null, "direct_source" => $playVodUrl . '?movieId=' . $movie['id'],
                     "plot" => $movie['overview'], "backdrop_path" =>
@@ -243,14 +251,18 @@ function fetchMoviesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
             $movies = $data['results'];
 
             foreach ($movies as $movie) {
-				$timestamp = $GLOBALS['addedTimestamp']--;
+								// Skip invalid movies
+                if (!isValidMovie($movie)) {
+                    continue;
+                }  
+								$timestamp = $GLOBALS['addedTimestamp']--;
                 // JSON formatting for each movie
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
-					$date = $movie['release_date'];
+										$date = $movie['release_date'];
                 } else { 
-					$date = '1970-01-01';
+										$date = '1970-01-01';
                     $year = '1970'; //Set to 1970 since its unknown.
                 }
 
@@ -306,13 +318,7 @@ function fetchGenres($playVodUrl, $language, $apiKey, $totalPages)
         $genres = $genreData['genres'];
 
         foreach ($genres as $genre) {
-            if ($listType == 'json') {
-                fetchMoviesByGenre($genre['id'], $genre['name'], $playVodUrl, $language, $apiKey,
-                    $totalPages);
-            } else {
-                fetchMoviesByGenre($genre['id'], $genre['name'], $playVodUrl, $language, $apiKey,
-                    $totalPages);
-            }
+					fetchMoviesByGenre($genre['id'], $genre['name'], $playVodUrl, $language, $apiKey, $totalPages);
         }
     }
 
@@ -334,5 +340,18 @@ function measureExecutionTime($func, ...$params) {
     echo "Total Execution Time for $func: " . $minutes . " minute(s) and " . floor($seconds) . "." . sprintf('%03d', $milliseconds) . " second(s)</br>";
 }
 
+function isValidMovie($movie) {
+		global $minYear;
+    // Check if movie has a poster image
+    if (empty($movie['poster_path'])) {
+        return false;
+    }
+    
+    // Check release year
+    $releaseDate = $movie['release_date'] ?? '1970-01-01';
+    $year = (int)substr($releaseDate, 0, 4);
+    
+    // Skip movies older than 1970
+    return $year >= $minYear;
+}
 ?>
-
