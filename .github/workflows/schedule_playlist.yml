@@ -38,4 +38,5 @@ jobs:
         git config user.email "actions@github.com"
         git add playlist.m3u8 playlist.json tv_playlist.json
         git commit -m "Update Playlists" || echo "No changes to Playlists"
+        git pull --rebase origin main || true
         git push https://x-access-token:${{ secrets.RUN_ACTIONS }}@github.com/gogetta69/public-files.git
