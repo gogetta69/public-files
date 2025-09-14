@@ -16,8 +16,9 @@ if ($GLOBALS['DEBUG'] !== true) {
 //Set globals
 $apiKey = getenv('SECRET_API_KEY');
 $playVodUrl = "[[SERVER_URL]]/play.php";
-$totalPages = 250;
+$totalPages = 300; // Added more pages due to strict filters.
 $minYear = 1970; // Skip older titles
+$minRuntime = 30; // In Minutes. Works with /discover only.
 $language = 'en-US';
 $movies_with_origin_country = 'US';
 $num = 0;
@@ -101,7 +102,7 @@ function fetchNowPlayingMovies($playVodUrl, $language, $apiKey, $totalPages)
                     continue;
                 }                
                 // JSON formatting for each movie
-								$timestamp = $GLOBALS['addedTimestamp']--;
+								$timestamp = isset($movie['release_date']) ? strtotime($movie['release_date']) : strtotime('1970-01-01');
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
                     $year = $dateParts[0];
@@ -179,7 +180,7 @@ function fetchPopularMovies($playVodUrl, $language, $apiKey, $totalPages)
                 if (!isValidMovie($movie)) {
                     continue;
                 }  
-								$timestamp = $GLOBALS['addedTimestamp']--;
+								$timestamp = isset($movie['release_date']) ? strtotime($movie['release_date']) : strtotime('1970-01-01');
                 // JSON formatting for each movie
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
@@ -239,7 +240,7 @@ function fetchMoviesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
 	$capturedTotalPages = null;
 
     for ($page = 1; $page <= $totalPages; $page++) {
-        $url = $baseUrl . "?api_key=$apiKey&include_adult=false&with_origin_country=$movies_with_origin_country&language=$language&with_genres=$genreId&page=$page";
+        $url = $baseUrl . "?api_key=$apiKey&include_adult=false&with_runtime.gte=$minRuntime&with_origin_country=$movies_with_origin_country&language=$language&with_genres=$genreId&page=$page";
         $data = fetchAndHandleErrors($url, "Request for $genreName movies failed.");
 		
         // Set the total pages after the first request
@@ -255,7 +256,7 @@ function fetchMoviesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
                 if (!isValidMovie($movie)) {
                     continue;
                 }  
-								$timestamp = $GLOBALS['addedTimestamp']--;
+								$timestamp = isset($movie['release_date']) ? strtotime($movie['release_date']) : strtotime('1970-01-01');
                 // JSON formatting for each movie
                 if (isset($movie['release_date'])) {
                     $dateParts = explode("-", $movie['release_date']);
