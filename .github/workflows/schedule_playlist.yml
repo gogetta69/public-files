@@ -3,7 +3,6 @@ name: Run Playlist Script
 on:
   schedule:
     - cron: '0 0 * * *'  # At 00:00 (midnight) UTC
-    - cron: '0 12 * * *' # At 12:00 (noon) UTC
   workflow_dispatch: # Manual trigger
 
 jobs:
