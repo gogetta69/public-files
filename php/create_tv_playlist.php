@@ -104,7 +104,8 @@ function fetchSeriesWithNetwork($playVodUrl, $language, $apiKey, $totalPages)
                         continue;
                     }
                     
-                    $timestamp = $GLOBALS['addedTimestamp']--;
+                    $timestamp = isset($show['first_air_date']) ? strtotime($show['first_air_date']) : strtotime('1970-01-01');
+
                 // JSON formatting for each show
                 if (isset($show['first_air_date'])) {
                     $dateParts = explode("-", $show['first_air_date']);
@@ -184,7 +185,8 @@ function fetchOnTheAirSeries($playVodUrl, $language, $apiKey, $totalPages)
                         continue;
                     }
                     
-                    $timestamp = $GLOBALS['addedTimestamp']--;
+                    $timestamp = isset($show['first_air_date']) ? strtotime($show['first_air_date']) : strtotime('1970-01-01');
+
                 // JSON formatting for each show
                 if (isset($show['first_air_date'])) {
                     $dateParts = explode("-", $show['first_air_date']);
@@ -262,7 +264,8 @@ function fetchPopularSeries($playVodUrl, $language, $apiKey, $totalPages)
                         continue;
                     }
                     
-                    $timestamp = $GLOBALS['addedTimestamp']--;
+                    $timestamp = isset($show['first_air_date']) ? strtotime($show['first_air_date']) : strtotime('1970-01-01');
+
                 // JSON formatting for each show
                 if (isset($show['first_air_date'])) {
                     $dateParts = explode("-", $show['first_air_date']);
@@ -340,7 +343,8 @@ function fetchTopRatedSeries($playVodUrl, $language, $apiKey, $totalPages)
                         continue;
                     }
                     
-                    $timestamp = $GLOBALS['addedTimestamp']--;
+                    $timestamp = isset($show['first_air_date']) ? strtotime($show['first_air_date']) : strtotime('1970-01-01');
+
                 // JSON formatting for each show
                 if (isset($show['first_air_date'])) {
                     $dateParts = explode("-", $show['first_air_date']);
@@ -419,7 +423,8 @@ function fetchSeriesByGenre($genreId, $genreName, $playVodUrl, $language, $apiKe
                         continue;
                     }
                     
-                    $timestamp = $GLOBALS['addedTimestamp']--;
+                    $timestamp = isset($show['first_air_date']) ? strtotime($show['first_air_date']) : strtotime('1970-01-01');
+
                 // JSON formatting for each show
                 if (isset($show['first_air_date'])) {
                     $dateParts = explode("-", $show['first_air_date']);
